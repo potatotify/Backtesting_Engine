@@ -10,10 +10,13 @@ from fastapi.exceptions import RequestValidationError
 from db.database import engine, Base
 from api import health
 from api import brokers as broker_routes
+from api import strategies as strategy_routes
 from auth import routes as auth_routes
 
 # Import models to ensure they are registered with SQLAlchemy
 from models import user  # noqa: F401
+from models import strategy  # noqa: F401
+from models import backtest  # noqa: F401
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -54,6 +57,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 app.include_router(health.router, prefix="/health")
 app.include_router(auth_routes.router)
 app.include_router(broker_routes.router)
+app.include_router(strategy_routes.router)
 
 
 @app.get("/")
