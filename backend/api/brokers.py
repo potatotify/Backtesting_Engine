@@ -19,11 +19,11 @@ async def get_available_brokers() -> Dict[str, Any]:
     """
     try:
         # Get available brokers from factory
-        available_brokers = ["binance"]  # Currently only Binance is implemented
+        brokers = BrokerFactory.get_available_brokers()
         
         return {
-            "brokers": available_brokers,
-            "count": len(available_brokers),
+            "brokers": brokers,
+            "count": len(brokers),
             "default": "binance"
         }
     except Exception as e:
@@ -31,7 +31,6 @@ async def get_available_brokers() -> Dict[str, Any]:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get available brokers: {str(e)}"
         )
-
 
 @router.get("/ohlc")
 async def get_ohlc(
@@ -93,18 +92,3 @@ async def get_ohlc(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error fetching OHLC data: {str(e)}"
         )
-
-
-@router.get("/available")
-async def get_available_brokers() -> Dict[str, Any]:
-    """
-    Get list of available brokers.
-    
-    Returns:
-        Dictionary containing list of available broker names
-    """
-    brokers = BrokerFactory.get_available_brokers()
-    return {
-        "brokers": brokers,
-        "count": len(brokers)
-    }
