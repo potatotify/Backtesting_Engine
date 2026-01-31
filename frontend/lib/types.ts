@@ -57,6 +57,14 @@ export interface BacktestDetail {
     created_at: string | null;
 }
 
+export interface User {
+    id: number;
+    email: string;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Strategy {
     id: number;
     name: string;

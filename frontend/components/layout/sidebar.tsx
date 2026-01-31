@@ -14,7 +14,8 @@ import {
     Database
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useUser } from "@/lib/useUser";
 
 const sidebarItems = [
     {
@@ -41,16 +42,7 @@ export default function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [user, setUser] = useState<any>(null);
-
-    useEffect(() => {
-        // Get user info from token or API
-        const token = localStorage.getItem("token");
-        if (token) {
-            // You could decode the JWT or fetch user info
-            setUser({ name: "User", email: "user@example.com" });
-        }
-    }, []);
+    const { user } = useUser();
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -59,7 +51,7 @@ export default function Sidebar() {
 
     return (
         <div className={cn(
-            "flex h-screen flex-col justify-between border-r border-[var(--color-border)] bg-gradient-to-b from-white to-gray-50 transition-all duration-300 ease-in-out",
+            "relative flex h-screen flex-col justify-between border-r border-[var(--color-border)] bg-gradient-to-b from-white to-gray-50 transition-all duration-300 ease-in-out",
             isCollapsed ? "w-16" : "w-64"
         )}>
             <div className="flex flex-col">
@@ -77,7 +69,7 @@ export default function Sidebar() {
                                 <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                                     Backtesting Platform
                                 </h1>
-                                <p className="text-xs text-[var(--color-muted)] -mt-1">Pro Edition</p>
+                                
                             </div>
                         )}
                     </div>
@@ -92,7 +84,7 @@ export default function Sidebar() {
                     {isCollapsed && (
                         <button
                             onClick={() => setIsCollapsed(false)}
-                            className="absolute left-16 top-4 p-1 rounded-md bg-white shadow-md hover:shadow-lg transition-all"
+                            className="absolute left-1/2 top-4 -translate-x-1/2 z-50 p-2 rounded-md bg-white shadow-md hover:shadow-lg hover:bg-gray-50 transition-all border border-[var(--color-border)]"
                         >
                             <Activity className="h-4 w-4 text-[var(--color-muted)]" />
                         </button>
@@ -167,15 +159,15 @@ export default function Sidebar() {
                         <div className="flex items-center gap-3 mb-3">
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                                 <span className="text-white text-sm font-medium">
-                                    {user.name?.charAt(0) || 'U'}
+                                    {user.email?.charAt(0).toUpperCase() || 'U'}
                                 </span>
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium text-[var(--color-primary-text)] truncate">
-                                    {user.name || 'User'}
+                                    {user.email?.split('@')[0] || 'User'}
                                 </p>
                                 <p className="text-xs text-[var(--color-muted)] truncate">
-                                    {user.email || 'user@example.com'}
+                                    {user.email}
                                 </p>
                             </div>
                         </div>

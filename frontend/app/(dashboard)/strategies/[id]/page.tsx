@@ -311,7 +311,7 @@ export default function StrategyDetailPage({ params }: { params: Promise<{ id: s
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <Label htmlFor="startTime">Start Date (Optional)</Label>
+                                    <Label htmlFor="startTime">Start Date</Label>
                                     <Input
                                         type="datetime-local"
                                         value={startTime}
@@ -319,7 +319,7 @@ export default function StrategyDetailPage({ params }: { params: Promise<{ id: s
                                     />
                                 </div>
                                 <div>
-                                    <Label htmlFor="endTime">End Date (Optional)</Label>
+                                    <Label htmlFor="endTime">End Date</Label>
                                     <Input
                                         type="datetime-local"
                                         value={endTime}

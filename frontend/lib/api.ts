@@ -41,4 +41,10 @@ api.interceptors.response.use(
     }
 );
 
+// Auth API
+export async function getCurrentUser() {
+    const response = await api.get<import("./types").User>("/auth/me");
+    return response.data;
+}
+
 export default api;

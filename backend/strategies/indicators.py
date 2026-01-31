@@ -346,3 +346,53 @@ def calculate_supertrend(
         supertrend.append(st_value)
     
     return supertrend
+
+
+def calculate_stochastic(
+    highs: List[float],
+    lows: List[float],
+    closes: List[float],
+    period_k: int = 14,
+    period_d: int = 3
+) -> Dict[str, List[float]]:
+    """
+    Calculate Stochastic Oscillator (%K and %D).
+
+    Args:
+        highs: List of high prices
+        lows: List of low prices
+        closes: List of close prices
+        period_k: %K lookback period (default: 14)
+        period_d: %D smoothing period (default: 3)
+
+    Returns:
+        Dictionary with keys: 'k', 'd'
+    """
+    if len(closes) < period_k + period_d:
+        return {'k': [None] * len(closes), 'd': [None] * len(closes)}
+
+    k_values = []
+    for i in range(len(closes)):
+        if i < period_k - 1:
+            k_values.append(None)
+        else:
+            low = min(lows[i - period_k + 1:i + 1])
+            high = max(highs[i - period_k + 1:i + 1])
+            if high == low:
+                k_values.append(50.0)
+            else:
+                k = 100 * (closes[i] - low) / (high - low)
+                k_values.append(k)
+
+    d_values = []
+    for i in range(len(closes)):
+        if i < period_k - 1 + period_d - 1:
+            d_values.append(None)
+        else:
+            d_slice = k_values[i - period_d + 1:i + 1]
+            if all(v is not None for v in d_slice):
+                d_values.append(sum(d_slice) / period_d)
+            else:
+                d_values.append(None)
+
+    return {'k': k_values, 'd': d_values}

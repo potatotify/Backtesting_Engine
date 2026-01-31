@@ -11,7 +11,7 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import { Plus, Code, Trash2, PlayCircle, Edit, Eye, Calendar, User, TrendingUp } from "lucide-react";
+import { Plus, Code, Trash2, PlayCircle, Edit, Eye, Calendar, User } from "lucide-react";
 import { Strategy } from "@/lib/types";
 
 export default function StrategiesPage() {
@@ -111,51 +111,6 @@ export default function StrategiesPage() {
                         This platform is designed for strategy development and historical performance analysis.</p>
                     </div>
                 </div>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="card-hover bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-                    <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-blue-600">Total Strategies</p>
-                                <p className="text-3xl font-bold text-blue-800">{strategies.length}</p>
-                            </div>
-                            <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                                <Code className="h-6 w-6 text-white" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <Card className="card-hover bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-                    <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-green-600">Active Strategies</p>
-                                <p className="text-3xl font-bold text-green-800">{strategies.length}</p>
-                            </div>
-                            <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-                                <TrendingUp className="h-6 w-6 text-white" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <Card className="card-hover bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
-                    <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-purple-600">Avg Performance</p>
-                                <p className="text-3xl font-bold text-purple-800">+12.5%</p>
-                            </div>
-                            <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-                                <PlayCircle className="h-6 w-6 text-white" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
             </div>
 
             {/* Strategies Grid */}

@@ -164,7 +164,7 @@ export default function BrokerSelector({
                     </div>
 
                     <div>
-                        <Label htmlFor="startTime">Start Date (Optional)</Label>
+                        <Label htmlFor="startTime">Start Date</Label>
                         <Input
                             type="datetime-local"
                             value={startTime}
@@ -173,7 +173,7 @@ export default function BrokerSelector({
                     </div>
 
                     <div>
-                        <Label htmlFor="endTime">End Date (Optional)</Label>
+                        <Label htmlFor="endTime">End Date</Label>
                         <Input
                             type="datetime-local"
                             value={endTime}

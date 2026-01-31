@@ -3,10 +3,12 @@
 import { usePathname } from "next/navigation";
 import { Bell, Search, Settings, User, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { useUser } from "@/lib/useUser";
 
 export default function Header() {
     const pathname = usePathname();
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const { user } = useUser();
 
     const getTitle = () => {
         if (pathname === "/dashboard") return "Dashboard";
@@ -82,7 +84,7 @@ export default function Header() {
                         <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[var(--color-border)] py-2 animate-scale-in">
                             <div className="px-4 py-2 border-b border-[var(--color-border)]">
                                 <p className="text-sm font-medium text-[var(--color-primary-text)]">User Account</p>
-                                <p className="text-xs text-[var(--color-muted)]">user@example.com</p>
+                                <p className="text-xs text-[var(--color-muted)] truncate">{user?.email || 'Loading...'}</p>
                             </div>
                             <button className="w-full text-left px-4 py-2 text-sm text-[var(--color-secondary-text)] hover:bg-gray-50 transition-colors">
                                 Profile Settings

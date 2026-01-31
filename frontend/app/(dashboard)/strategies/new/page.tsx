@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import StrategyTemplates from "@/components/ui/strategy-templates";
+import StrategyParameterBuilder, { type GeneratedStrategy } from "@/components/ui/strategy-parameter-builder";
 import Editor from "@monaco-editor/react";
 import { ArrowLeft, Save, Code2, Sparkles, FileText, Lightbulb } from "lucide-react";
 import Link from "next/link";
@@ -50,7 +51,7 @@ class MyStrategy(BaseStrategy):
 
 export default function NewStrategyPage() {
     const router = useRouter();
-    const [step, setStep] = useState<"template" | "code">("template");
+    const [step, setStep] = useState<"template" | "parameters" | "code">("template");
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [className, setClassName] = useState("MyStrategy");
@@ -58,6 +59,7 @@ export default function NewStrategyPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+    const [isQuickBuild, setIsQuickBuild] = useState(false);
 
     const handleTemplateSelect = (template: any) => {
         setSelectedTemplate(template);
@@ -65,6 +67,23 @@ export default function NewStrategyPage() {
         setDescription(template.description);
         setClassName(template.className);
         setCode(template.code);
+        setIsQuickBuild(false);
+        setStep("code");
+    };
+
+    const handleQuickBuildClick = () => {
+        setSelectedTemplate(null);
+        setIsQuickBuild(true);
+        setStep("parameters");
+    };
+
+    const handleParameterGenerate = (strategy: GeneratedStrategy) => {
+        setSelectedTemplate(strategy);
+        setName(strategy.name);
+        setDescription(strategy.description);
+        setClassName(strategy.className);
+        setCode(strategy.code);
+        setIsQuickBuild(true);
         setStep("code");
     };
 
@@ -99,6 +118,11 @@ export default function NewStrategyPage() {
     const handleBackToTemplates = () => {
         setStep("template");
         setSelectedTemplate(null);
+        setIsQuickBuild(false);
+    };
+
+    const handleBackToParameters = () => {
+        setStep("parameters");
     };
 
     if (step === "template") {
@@ -123,8 +147,33 @@ export default function NewStrategyPage() {
                     </div>
                 </div>
 
-                {/* Templates */}
-                <StrategyTemplates onSelectTemplate={handleTemplateSelect} />
+                {/* Templates + Quick Build */}
+                <StrategyTemplates 
+                    onSelectTemplate={handleTemplateSelect} 
+                    onQuickBuildClick={handleQuickBuildClick}
+                />
+            </div>
+        );
+    }
+
+    if (step === "parameters") {
+        return (
+            <div className="space-y-6 animate-fade-in">
+                <div className="flex justify-between items-center">
+                    <Button variant="outline" size="sm" onClick={handleBackToTemplates}>
+                        <ArrowLeft className="h-4 w-4 mr-1" />
+                        Back to Templates
+                    </Button>
+                    <div>
+                        <h1 className="text-2xl font-bold text-[var(--color-primary-text)]">
+                            Quick Build — Input Parameters
+                        </h1>
+                        <p className="text-[var(--color-muted)]">
+                            Configure your strategy and we&apos;ll generate the code
+                        </p>
+                    </div>
+                </div>
+                <StrategyParameterBuilder onGenerate={handleParameterGenerate} />
             </div>
         );
     }
@@ -142,21 +191,29 @@ export default function NewStrategyPage() {
                             <h2 className="text-2xl font-bold text-[var(--color-primary-text)]">
                                 {selectedTemplate ? selectedTemplate.name : "New Strategy"}
                             </h2>
-                            {selectedTemplate && selectedTemplate.id !== "custom" && (
-                                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full border border-blue-200">
-                                    Template
+                            {selectedTemplate && (
+                                <span className={`px-2 py-1 text-xs rounded-full border ${
+                                    isQuickBuild 
+                                        ? "bg-green-100 text-green-800 border-green-200" 
+                                        : "bg-blue-100 text-blue-800 border-blue-200"
+                                }`}>
+                                    {isQuickBuild ? "Generated" : "Template"}
                                 </span>
                             )}
                         </div>
                         <p className="text-[var(--color-muted)]">
-                            {selectedTemplate ? "Customize your strategy code and parameters" : "Define your trading logic in Python"}
+                            {selectedTemplate ? (
+                                isQuickBuild 
+                                    ? "Edit the generated code if needed, then save your strategy" 
+                                    : "Customize your strategy code and parameters"
+                            ) : "Define your trading logic in Python"}
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Button variant="outline" onClick={handleBackToTemplates}>
+                    <Button variant="outline" onClick={isQuickBuild ? handleBackToParameters : handleBackToTemplates}>
                         <Sparkles className="mr-2 h-4 w-4" />
-                        Change Template
+                        {isQuickBuild ? "Change Parameters" : "Change Template"}
                     </Button>
                     <Button onClick={handleSave} disabled={loading} className="btn-gradient">
                         <Save className="mr-2 h-4 w-4" />
@@ -227,7 +284,7 @@ export default function NewStrategyPage() {
                         </div>
 
                         {/* Template Info */}
-                        {selectedTemplate && selectedTemplate.id !== "custom" && (
+                        {selectedTemplate && selectedTemplate.id !== "custom" && !isQuickBuild && (
                             <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                 <h4 className="text-sm font-medium text-blue-800 mb-2">Template Features:</h4>
                                 <ul className="text-xs text-blue-700 space-y-1">
@@ -238,6 +295,12 @@ export default function NewStrategyPage() {
                                         </li>
                                     ))}
                                 </ul>
+                            </div>
+                        )}
+                        {selectedTemplate && isQuickBuild && (
+                            <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <h4 className="text-sm font-medium text-green-800 mb-1">Generated Strategy</h4>
+                                <p className="text-xs text-green-700">Edit the code if needed, then save.</p>
                             </div>
                         )}
                     </CardContent>

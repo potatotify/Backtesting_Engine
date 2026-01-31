@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./card";
 import { Button } from "./button";
 import { Badge } from "./badge";
-import { Code, TrendingUp, Activity, Target, Zap } from "lucide-react";
+import { Code, TrendingUp, Activity, Target, Zap, Sliders } from "lucide-react";
 
 interface StrategyTemplate {
     id: string;
@@ -315,9 +315,10 @@ class MACDMomentumStrategy(BaseStrategy):
 
 interface StrategyTemplatesProps {
     onSelectTemplate: (template: StrategyTemplate) => void;
+    onQuickBuildClick?: () => void;
 }
 
-export default function StrategyTemplates({ onSelectTemplate }: StrategyTemplatesProps) {
+export default function StrategyTemplates({ onSelectTemplate, onQuickBuildClick }: StrategyTemplatesProps) {
     const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
     const getDifficultyColor = (difficulty: string) => {
@@ -428,6 +429,37 @@ export default function StrategyTemplates({ onSelectTemplate }: StrategyTemplate
                         </CardContent>
                     </Card>
                 ))}
+
+                {/* Quick Build with Parameters */}
+                {onQuickBuildClick && (
+                    <Card 
+                        onClick={onQuickBuildClick}
+                        className="card-hover cursor-pointer border-2 border-green-200 bg-gradient-to-br from-green-50/50 to-emerald-50/50 hover:border-green-400 hover:shadow-lg transition-all duration-300"
+                    >
+                        <CardContent className="p-6 text-center">
+                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Sliders className="h-6 w-6 text-green-600" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-[var(--color-primary-text)] mb-2">
+                                Quick Build
+                            </h3>
+                            <p className="text-sm text-[var(--color-muted)] mb-4">
+                                Input parameters and we&apos;ll generate the Python code for you. Edit and save.
+                            </p>
+                            <Button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onQuickBuildClick();
+                                }}
+                                variant="outline"
+                                className="w-full border-green-300 text-green-700 hover:bg-green-50"
+                            >
+                                <Sliders className="h-4 w-4 mr-2" />
+                                Build with Parameters
+                            </Button>
+                        </CardContent>
+                    </Card>
+                )}
 
                 {/* Custom Strategy Option */}
                 <Card className="card-hover cursor-pointer border-dashed border-2 border-[var(--color-border)] hover:border-[var(--color-primary)] transition-all duration-300">

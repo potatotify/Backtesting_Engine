@@ -5,6 +5,7 @@ Uses factory pattern for centralized broker creation.
 from typing import Optional
 from brokers.base import BrokerBase
 from brokers.binance import BinanceBroker
+from brokers.kraken import KrakenBroker
 
 
 class BrokerFactory:
@@ -18,8 +19,7 @@ class BrokerFactory:
     # Registry of available brokers
     _brokers = {
         "binance": BinanceBroker,
-        # Future brokers will be added here:
-        # "fyers": FyersBroker,
+        "kraken": KrakenBroker,
     }
     
     @classmethod
